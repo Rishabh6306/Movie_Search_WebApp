@@ -1,15 +1,15 @@
 import React from 'react';
-import { useGlobalContext } from '../../Context';
+import Search from './Search';
+import Movies from './Movies';
 
 function Home() {
 
-  const myname = useGlobalContext();
-
-    return (
-        <div className='text-5xl '>
-          Hello {myname}
-        </div>
-    )
+  return (
+    <div className='text-5xl '>
+      <Search />
+      <Movies />
+    </div>
+  )
 }
 
 export default Home;
