@@ -10,7 +10,7 @@ const Movies = () => {
   if (isLoading) return <div className="flex justify-center items-center h-screen"><p className="text-xl font-semibold">Loading...</p></div>;
 
   return (
-    <section className="p-4 sm:p-8 min-h-screen mt-36 md:mt-24 bg-gray-100">
+    <section className="p-4 sm:p-8 min-h-screen pt-44 md:pt-24">
       {/* Show message if no movies found */}
       {!visibleMovies.length ? (
         <p className="text-center text-lg font-medium">No movies found{searchTerm && ` for "${searchTerm}"`}</p>

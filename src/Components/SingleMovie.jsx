@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useGlobalContext } from "../Context";
+import { FaBackspace } from "react-icons/fa";
+import { IoHome } from "react-icons/io5";
 
 const SingleMovie = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const { getMovieById, singleMovie, allMovies, isLoading } = useGlobalContext();
 
@@ -28,19 +29,18 @@ const SingleMovie = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      >
-        ← Back
-      </button>
+      <div className="flex justify-between w-full">
+        <Link to="/" className="text-pink-600 px-4 py-2 rounded hover:text-pink-700 transition"> <IoHome size={26} /> </Link>
+        <Link to="/home" className="mb-4 text-pink-600 px-4 py-2 rounded hover:text-pink-700 transition"><FaBackspace size={26} /></Link>
+      </div>
 
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row gap-6">
         <img
           src={posterUrl}
           alt={title}
           onError={(e) => {
-            e.target.src = "https://via.placeholder.com/300x450?text=No+Image";
+            e.target.onerror = null; // Prevent infinite loop
+            e.target.src = "https://st4.depositphotos.com/14953852/24787/v/450/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg";
           }}
           className="w-full md:w-[300px] h-[450px] object-cover rounded-xl"
         />
