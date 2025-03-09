@@ -1,123 +1,99 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import movieData from '../movieData.json';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import movieData from "../movieData.json";
 
+// Create Context
 const AppContext = createContext();
 
+// Provider Component
 const AppProvider = ({ children }) => {
-  const [allMovies, setAllMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [visibleMovies, setVisibleMovies] = useState([]);
+  // Global State
+  const [allMovies, setAllMovies] = useState([]); // full movie list
+  const [filteredMovies, setFilteredMovies] = useState([]); // after search/filter
+  const [visibleMovies, setVisibleMovies] = useState([]); // shown on screen (infinite scroll)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [selectedYear, setSelectedYear] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState({ show: false, mess: "" });
   const [singleMovie, setSingleMovie] = useState(null);
-  const [loadCount] = useState(10);
+  const [loadCount] = useState(10); // items per scroll
 
+  // Get a single movie by ID for detail page
   const getMovieById = (id) => {
-    const movie = allMovies.find((movie, index) => `${movie.title}-${index}` === id);
+    const movie = allMovies.find((m) => m.uid === id);
     setSingleMovie(movie || null);
   };
 
-  const isImageValid = (url) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-    });
-  };
-
+  // Load all movies on app start and assign unique ID
   const loadMovies = async () => {
     try {
-      const validMovies = [];
-      for (const movie of movieData.movies) {
-        const isValid = await isImageValid(movie.posterUrl);
-        if (isValid) validMovies.push(movie);
-      }
+      const validMovies = movieData.movies.map((m, i) => ({ ...m, uid: `movie-${i}` }));
       setAllMovies(validMovies);
       setFilteredMovies(validMovies);
       setVisibleMovies(validMovies.slice(0, loadCount));
       setIsLoading(false);
     } catch (error) {
-      console.error("Loading error:", error);
       setIsError({ show: true, mess: "Something went wrong while loading movies." });
     }
   };
 
-  const loadMoreMovies = () => {
-    const moreMovies = filteredMovies.slice(0, visibleMovies.length + loadCount);
-    setVisibleMovies(moreMovies);
-  };
-
+  // Filter movies by search, genre, and year
   const filterMovies = () => {
-    let filtered = [...allMovies];
+    // Reset visible movies to first loadCount
+    let result = [...allMovies];
 
-    if (searchTerm.trim()) {
-      filtered = filtered.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+    // Apply search term filter if exists
+    if (searchTerm.trim()) result = result.filter((m) => m.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    if (selectedGenre !== "All") {
-      filtered = filtered.filter((movie) => movie.genres.includes(selectedGenre));
-    }
+    // Apply genre filter if exists
+    if (selectedGenre !== "All") result = result.filter((m) => m.genres.includes(selectedGenre));
 
-    if (selectedYear !== "All") {
-      filtered = filtered.filter((movie) => movie.year === selectedYear);
-    }
+    // Apply year filter if exists
+    if (selectedYear !== "All") result = result.filter((m) => m.year === selectedYear);
 
-    setFilteredMovies(filtered);
-    setVisibleMovies(filtered.slice(0, loadCount));
+    // Set filtered and visible movies
+    setFilteredMovies(result);
+    setVisibleMovies(result.slice(0, loadCount));
   };
 
-  useEffect(() => {
-    loadMovies();
-  }, []);
+  // Load more movies on scroll
+  const loadMoreMovies = () => setVisibleMovies(filteredMovies.slice(0, visibleMovies.length + loadCount));
 
-  useEffect(() => {
-    const delaySearch = setTimeout(() => {
-      filterMovies();
-    }, 500);
-    return () => clearTimeout(delaySearch);
-  }, [searchTerm, selectedGenre, selectedYear]);
+  // Initial movie load
+  useEffect(() => { loadMovies() }, []);
 
+  // Filter when input or filters change (with debounce)
+  useEffect(() => {
+    if (allMovies.length) {
+      const delay = setTimeout(filterMovies, 300);
+      return () => clearTimeout(delay);
+    }
+  }, [searchTerm, selectedGenre, selectedYear, allMovies]);
+
+  // Infinite scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop + 100 >=
-        document.documentElement.offsetHeight
-      ) {
+      // Check if user has scrolled to the bottom of the page, and load more movies if true
+      // 100 is added for a buffer to avoid triggering the scroll event too often
+      if (window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.offsetHeight) {
         loadMoreMovies();
       }
     };
+
+    // Add scroll event listener to window
     window.addEventListener("scroll", handleScroll);
+    // Clean up function to remove event listener when component unmounts
     return () => window.removeEventListener("scroll", handleScroll);
   }, [filteredMovies, visibleMovies]);
 
   return (
-    <AppContext.Provider
-      value={{
-        isLoading,
-        isError,
-        searchTerm,
-        setSearchTerm,
-        selectedGenre,
-        setSelectedGenre,
-        selectedYear,
-        setSelectedYear,
-        visibleMovies,
-        allMovies,
-        getMovieById,
-        singleMovie,
-      }}
-    >
+    // Provide values as context to all children components under AppProvider
+    <AppContext.Provider value={{ isLoading, isError, searchTerm, setSearchTerm, selectedGenre, setSelectedGenre, selectedYear, setSelectedYear, visibleMovies, allMovies, filteredMovies, getMovieById, singleMovie }} >
       {children}
     </AppContext.Provider>
   );
 };
 
+// Export hook for usage
 const useGlobalContext = () => useContext(AppContext);
-
 export { AppProvider, useGlobalContext };
