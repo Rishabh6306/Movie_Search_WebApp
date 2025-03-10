@@ -73,8 +73,8 @@ const AppProvider = ({ children }) => {
   // Infinite scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      // Check if user has scrolled to the bottom of the page, and load more movies if true
-      // 100 is added for a buffer to avoid triggering the scroll event too often
+      // Check if user scrolled near bottom (visible height + scroll + 100px buffer from bottom)
+      // If it’s greater than or equal to full page height, trigger load more
       if (window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.offsetHeight) {
         loadMoreMovies();
       }

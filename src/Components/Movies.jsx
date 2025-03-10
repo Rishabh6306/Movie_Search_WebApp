@@ -3,11 +3,12 @@ import { useGlobalContext } from "../Context";
 import { useNavigate } from "react-router-dom";
 
 const Movies = () => {
-  const { visibleMovies, searchTerm, isLoading } = useGlobalContext();
+  const { visibleMovies, searchTerm, isLoading, isError } = useGlobalContext();
   const navigate = useNavigate();
 
-  // Show loading spinner
-  if (isLoading) return <div className="flex justify-center items-center h-screen"><p className="text-xl font-semibold">Loading...</p></div>;
+  // Show error message if there is an error
+  if (isError.show) return <div className="flex justify-center items-center h-screen"><p className="text-xl text-red-600 font-semibold">{isError.mess}</p></div>;
+  else if (isLoading) return <div className="flex justify-center items-center h-screen"><p className="text-xl text-yellow-600 font-semibold">Loading...</p></div>;
 
   return (
     <section className="p-4 sm:p-8 min-h-screen pt-44 md:pt-24">

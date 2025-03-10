@@ -6,7 +6,7 @@ import { IoHome } from "react-icons/io5";
 const SearchAndFilter = () => {
   // Get global states & update functions
   const { searchTerm, setSearchTerm, selectedGenre, setSelectedGenre, selectedYear, setSelectedYear, allMovies } = useGlobalContext();
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [ showSuggestions, setShowSuggestions ] = useState(false);
 
   // Extract unique genres & years
   const genres = ["All", ...new Set(allMovies.flatMap(m => m.genres))];
@@ -28,7 +28,7 @@ const SearchAndFilter = () => {
 
       {/* Main row: search (left) + filters (right) */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4">
-        
+
         {/* Search with Home Icon */}
         <div className="relative w-full md:w-1/2">
           <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ const SearchAndFilter = () => {
         {/* Genre + Year Dropdowns */}
         <div className="flex gap-4 w-full md:w-auto justify-end">
           {[{ val: selectedGenre, set: setSelectedGenre, options: genres },
-            { val: selectedYear, set: setSelectedYear, options: years }]
+          { val: selectedYear, set: setSelectedYear, options: years }]
             .map(({ val, set, options }, i) => (
               <select
                 key={i}
