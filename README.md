@@ -1,12 +1,51 @@
-# React + Vite
+# Movie Search WebApp Installation Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Movie Search WebApp is a single-page React application that allows users to search for movies and filter results by year or genre.
 
-Currently, two official plugins are available:
+## Technologies Used
+- **Framework:** React.js
+- **Bundler:** Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router DOM
+- **Icons:** React Icons
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
+Ensure you have the following installed on your system:
+- Node.js (Latest LTS recommended)
+- Git
 
-## Expanding the ESLint configuration
+## Clone the Repository
+```sh
+git clone git@github.com:Rishabh6306/Movie_Search_WebApp.git
+cd Movie_Search_WebApp
+```
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Install Dependencies
+```sh
+npm install
+```
+
+## Start the Development Server
+```sh
+npm run dev
+```
+
+This will start the app at `http://localhost:5173/` by default.
+
+## Build for Production
+```sh
+npm run build
+```
+
+## Project Structure
+- **Vite** is used as the build tool for fast development.
+- **Tailwind CSS** is integrated for styling.
+- **React Router DOM** is used for navigation.
+- **React Icons** is used for icons.
+
+## Live Demo
+Check the live version here: [Movie Search WebApp](https://movie-detail-all.netlify.app/)
+
+## Need Help?
+If you have any queries, feel free to reach out via email at **rishabhsrivastav722@gmail.com** or connect on LinkedIn: [Rishabh Srivastav](https://www.linkedin.com/in/rishabhsrivastav723)
